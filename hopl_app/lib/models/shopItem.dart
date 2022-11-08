@@ -1,7 +1,7 @@
 class ShopItem {
   final String name;
   final double price;
-  final int quantity;
+  final int stockQuantity;
   final String imgUrl;
   final String category;
   final String productId;
@@ -10,7 +10,7 @@ class ShopItem {
   ShopItem({
     required this.name,
     required this.price,
-    required this.quantity,
+    required this.stockQuantity,
     required this.imgUrl,
     required this.category,
     required this.productId,

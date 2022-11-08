@@ -64,7 +64,6 @@ class _ShopGridItemState extends State<ShopGridItem> {
                       shop.shopId,
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
-                      shop.items[widget.i].quantity,
                       shop.items[widget.i].price);
                 },
                 child: Container(
@@ -98,8 +97,8 @@ class _ShopGridItemState extends State<ShopGridItem> {
                       shop.shopId,
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
-                      shop.items[widget.i].quantity,
-                      shop.items[widget.i].price);
+                      shop.items[widget.i].price,
+                      shop.items[widget.i].imgUrl);
                 },
                 child: Container(
                   color: Colors.purple,

@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:hopl_app/providers/orders.dart';
 import 'package:hopl_app/providers/shops.dart';
+import 'package:hopl_app/screens/OrdersScreen.dart';
 import 'package:hopl_app/widgets/Shop/ShopGridItem.dart';
 import 'package:provider/provider.dart';
 
@@ -149,7 +150,8 @@ class ShopScreen extends StatelessWidget {
       ),
       floatingActionButton: GestureDetector(
         onTap: (() {
-          
+          Navigator.pushNamed(context, OrdersScreen.routeName,
+              arguments: shopId);
         }),
         child: Container(
           decoration: BoxDecoration(

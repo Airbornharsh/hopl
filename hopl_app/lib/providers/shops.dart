@@ -13,7 +13,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 5,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -22,7 +22,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 50,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -31,7 +31,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 100,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -40,7 +40,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 100,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -49,7 +49,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 100,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -58,7 +58,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 100,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",
@@ -67,7 +67,7 @@ class Shops with ChangeNotifier {
           ShopItem(
               name: "Chips",
               price: 100,
-              quantity: 20,
+              stockQuantity: 20,
               imgUrl:
                   "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               category: "food",

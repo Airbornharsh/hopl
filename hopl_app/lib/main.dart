@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hopl_app/providers/orders.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:hopl_app/screens/HomeScreen.dart';
+import 'package:hopl_app/screens/OrdersScreen.dart';
 import 'package:hopl_app/screens/ShopScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         home: const HomeScreen(),
         routes: {
           ShopScreen.routeName: (ctx) => const ShopScreen(),
+          OrdersScreen.routeName: (ctx) => const OrdersScreen()
         },
       ),
     );
