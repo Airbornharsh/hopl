@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "hopl_app",
+            "cwd": "hopl_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "hopl_app (profile mode)",
+            "cwd": "hopl_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "hopl_app (release mode)",
+            "cwd": "hopl_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
