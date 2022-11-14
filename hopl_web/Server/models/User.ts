@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  orders: {},
+  orders: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "UserOrder",
+    default: [],
+  },
   shopkeeper: {
     type: Boolean,
     default: false,

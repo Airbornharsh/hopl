@@ -4,9 +4,16 @@ const userProductSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
+    required: true,
+  },
+  orderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "UserOrder",
+    required: true,
   },
   quantity: {
     type: Number,
+    default: 1,
   },
   price: {
     type: Number,

@@ -9,6 +9,7 @@ const shopSchema = new mongoose.Schema({
   shopKeeperId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   address: {
     type: String,
@@ -27,7 +28,9 @@ const shopSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Image",
   },
-  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  products: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Product", default: [] },
+  ],
 });
 
 export default mongoose.models.Shop || mongoose.model("Shop", shopSchema);

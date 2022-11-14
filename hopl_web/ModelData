@@ -1,0 +1,26 @@
+Shop:
+
+{
+  "description": "This is a Grocery Store",
+  "name": "Harsh Store",
+  "shopKeeperId": "636fe1d1c884e0ff191d3d37",
+  "address": "Near Bhawanipatna",
+  "longitude": "83.153068",
+  "latitude": "19.904995",
+  "category": "grocery",
+  "imgUrl": "",
+  "products": []
+}
+
+Product:
+
+{
+  "description": "This is a Grocery Store",
+  "name": "Chip",
+  "shopId": "63721380c5fe3c117f2393ee",
+  "quantity": 3,
+  "price": 5,
+  "category": "snack",
+  "imgUrl": "",
+}
+

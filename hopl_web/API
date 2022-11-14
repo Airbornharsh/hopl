@@ -1,0 +1,46 @@
+api:
+    user:
+        login
+        register:
+            verify
+        shop-list
+        product-list:
+            [shopId]
+
+
+    loggeduser:
+        apply-shopkeeper
+        profile:
+            get
+            edit
+        user-order:
+            add
+            list
+            get
+            edit
+            delete
+            user-product:
+                add
+                list
+                get
+                edit
+                delete
+
+
+    shopkeeper:
+        shop:
+            get
+            edit
+            product:
+                add
+                list
+                edit
+                quantity:
+                    add
+                delete
+        user:
+            list
+            order:
+                confirm
+                product:
+                    confirm
