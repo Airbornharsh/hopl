@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/widgets/AppDrawer.dart';
 import 'package:hopl_app/widgets/Home/shop_list.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context, listen: false);
+    
+    
+
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hopl_app/screens/Auth_Screen.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -35,30 +36,13 @@ class AppDrawer extends StatelessWidget {
           // ),
           // const Divider(),
           ListTile(
-            leading: const Icon(Icons.payment),
-            title: const Text('Orders'),
+            leading: const Icon(Icons.login),
+            title: const Text('Login'),
             onTap: () {
-              // Navigator.of(context)
-              //     .pushReplacementNamed(OrdersScreen.routeName);
+              Navigator.of(context).pushNamed(AuthScreen.routeName);
             },
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Manage Products'),
-            onTap: () {
-              // Navigator.of(context)
-              //     .pushReplacementNamed(UserProductsScreen.routeName);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('Log Out'),
-            onTap: () {
-              // Provider.of<Auth>(context, listen: false).logout();
-            },
-          ),
+          const Divider()
         ],
       ),
     );
