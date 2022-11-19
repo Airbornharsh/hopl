@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hopl_app/providers/orders.dart';
+import 'package:hopl_app/models/shop.dart';
+import 'package:hopl_app/providers/order.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:provider/provider.dart';
 
 class ShopGridItem extends StatefulWidget {
   final int i;
-  const ShopGridItem({super.key, required this.i});
+  final Shop shop;
+  const ShopGridItem({super.key, required this.i, required this.shop});
 
   @override
   State<ShopGridItem> createState() => _ShopGridItemState();
@@ -17,7 +19,7 @@ class _ShopGridItemState extends State<ShopGridItem> {
   @override
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
-    final shop = Provider.of<Shops>(context).filterById(shopId);
+    var shop = widget.shop;
     return Container(
       height: 300,
       margin: const EdgeInsets.only(bottom: 20),
@@ -60,8 +62,9 @@ class _ShopGridItemState extends State<ShopGridItem> {
                       quantity -= 1;
                     });
                   }
-                  Provider.of<Orders>(context, listen: false).removeItem(
+                  Provider.of<Order>(context, listen: false).removeItem(
                       shop.shopId,
+                      "63728e2cb5f2ed1c362922ad",
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
                       shop.items[widget.i].price);
@@ -93,8 +96,9 @@ class _ShopGridItemState extends State<ShopGridItem> {
                   setState(() {
                     quantity += 1;
                   });
-                  Provider.of<Orders>(context, listen: false).addItem(
+                  Provider.of<Order>(context, listen: false).addItem(
                       shop.shopId,
+                      "63728e2cb5f2ed1c362922ad",
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
                       shop.items[widget.i].price,

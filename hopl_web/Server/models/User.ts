@@ -18,22 +18,21 @@ const userSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  orders: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "UserOrder",
-    default: [],
-  },
+  orders: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "UserOrder", default: [] },
+  ],
   shopkeeper: {
     type: Boolean,
     default: false,
   },
   address: {
     type: String,
-    required: false,
+    // required: false,
   },
   imgUrl: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Image",
+    // type: mongoose.Schema.Types.ObjectId,
+    type: String,
+    // ref: "Image",
   },
 
   createdAt: {

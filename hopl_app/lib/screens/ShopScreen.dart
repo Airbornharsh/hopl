@@ -1,21 +1,47 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:hopl_app/providers/orders.dart';
+import 'package:hopl_app/models/shop.dart';
+import 'package:hopl_app/providers/order.dart';
 import 'package:hopl_app/providers/shops.dart';
-import 'package:hopl_app/screens/OrdersScreen.dart';
+import 'package:hopl_app/screens/OrderScreen.dart';
 import 'package:hopl_app/widgets/Shop/ShopGridItem.dart';
 import 'package:provider/provider.dart';
 
-class ShopScreen extends StatelessWidget {
+class ShopScreen extends StatefulWidget {
   static const routeName = "/shop";
+  var start = 1;
 
-  const ShopScreen({super.key});
+  ShopScreen({super.key});
+
+  @override
+  State<ShopScreen> createState() => _ShopScreenState();
+}
+
+class _ShopScreenState extends State<ShopScreen> {
+  var shop = Shop(
+      shopName: "",
+      description: "",
+      shopId: "",
+      rating: 0,
+      category: "",
+      items: [],
+      imgUrl:
+          "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
 
   @override
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
-    final shop = Provider.of<Shops>(context).filterById(shopId);
+
+    if (widget.start == 1) {
+      Provider.of<Shops>(context, listen: false).onShopLoad(shopId).then((e) {
+        setState(() {
+          shop = e;
+          widget.start = 0;
+        });
+      });
+    }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -139,8 +165,10 @@ class ShopScreen extends StatelessWidget {
                   mainAxisSpacing: 10,
                 ),
                 itemBuilder: ((ctx, i) {
+                  print(shop.items.length);
                   return ShopGridItem(
                     i: i,
+                    shop: shop,
                   );
                 }),
               ),
@@ -150,7 +178,7 @@ class ShopScreen extends StatelessWidget {
       ),
       floatingActionButton: GestureDetector(
         onTap: (() {
-          Navigator.pushNamed(context, OrdersScreen.routeName,
+          Navigator.pushNamed(context, OrderScreen.routeName,
               arguments: shopId);
         }),
         child: Container(

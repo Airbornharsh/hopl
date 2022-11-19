@@ -2,6 +2,7 @@ import 'package:hopl_app/models/shopItem.dart';
 
 class Shop {
   final String shopName;
+  final String description;
   final String shopId;
   final String imgUrl;
   final int rating;
@@ -10,6 +11,7 @@ class Shop {
 
   Shop(
       {required this.shopName,
+      required this.description,
       required this.shopId,
       required this.rating,
       required this.category,

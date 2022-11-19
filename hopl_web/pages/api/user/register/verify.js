@@ -13,6 +13,8 @@ const POSTHANDLER = async (req, res) => {
   try {
     const DbModels = await DbConnect();
 
+    console.log(req.body);
+
     if (!req.body.accessToken) return res.status(401).send("No access Token");
 
     let tempUser;
@@ -23,20 +25,22 @@ const POSTHANDLER = async (req, res) => {
       tempErr = err;
     });
 
-
     if (tempErr) return res.status(400).send(tempErr.message);
 
-    if (req.body.otp !== tempUser.otp.toString())
+    if (req.body.otp.toString() !== tempUser.otp.toString())
       return res.status(400).send("Wrong Otp");
+
 
     const newUser = new DbModels.user({
       name: tempUser.name,
       emailId: tempUser.emailId,
       phoneNumber: tempUser.phoneNumber,
       password: tempUser.password,
+      orders: []
     });
 
     const userSave = await newUser.save();
+
 
     return res.send(userSave);
   } catch (e) {

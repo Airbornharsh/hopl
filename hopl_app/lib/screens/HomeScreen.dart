@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hopl_app/providers/shops.dart';
 import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/widgets/AppDrawer.dart';
 import 'package:hopl_app/widgets/Home/shop_list.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,10 +17,24 @@ class _HomeScreenState extends State<HomeScreen> {
   final _searchController = TextEditingController();
 
   @override
+  void initState() {
+    void onLoad() async {
+      final prefs = await SharedPreferences.getInstance();
+      // prefs.setString("hopl_backend_uri", "http://localhost:3000");
+      prefs.setString("hopl_backend_uri", "http://10.0.2.2:3000");
+      // prefs.setString("hopl_backend_uri", "https://hopl.vercel.app");
+    }
+
+    onLoad();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: false);
-    
-    
+    final shops = Provider.of<Shops>(context, listen: false);
+
+    shops.onLoad();
 
     return Scaffold(
       drawer: const AppDrawer(),
@@ -37,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(300),
                   child: Image.network(
-                    "https://0.soompi.io/wp-content/uploads/2020/06/27114627/Nancy-3.jpg",
+                    Provider.of<User>(context).getDetails.imgUrl,
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
