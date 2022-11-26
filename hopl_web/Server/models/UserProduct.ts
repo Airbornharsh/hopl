@@ -15,8 +15,14 @@ const userProductSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  name: {
+    type: String,
+  },
   price: {
     type: Number,
+  },
+  imgUrl: {
+    type: String,
   },
   confirm: {
     type: Boolean,

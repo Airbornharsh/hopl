@@ -1,34 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hopl_app/models/userDetails.dart';
 import 'package:hopl_app/providers/order.dart';
 import "package:http/http.dart" as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-class UserDetails {
-  String name;
-  String emailId;
-  int phoneNumber;
-  List<dynamic> orders;
-  bool shopkeeper;
-  String address;
-  String imgUrl;
-  String createdAt;
-  String token;
-  bool isAuth;
-
-  UserDetails(
-      {required this.name,
-      required this.emailId,
-      required this.phoneNumber,
-      required this.orders,
-      required this.shopkeeper,
-      required this.address,
-      required this.imgUrl,
-      required this.createdAt,
-      required this.token,
-      required this.isAuth});
-}
 
 class User with ChangeNotifier {
   late UserDetails _userDetail = UserDetails(
@@ -54,6 +30,7 @@ class User with ChangeNotifier {
   // var _isAuth = false;
   // var _token;
   var _otpAccessToken;
+  var _shopkeeperActive = false;
 
   set setToken(String token) {
     _userDetail.token = token;
@@ -70,6 +47,14 @@ class User with ChangeNotifier {
 
   bool get getAuth {
     return _userDetail.isAuth;
+  }
+
+  get getShopkeeperActive {
+    return _shopkeeperActive;
+  }
+
+  void setShopkeeperActive(bool data) {
+    _shopkeeperActive = data;
   }
 
   UserDetails get getDetails {
@@ -94,10 +79,11 @@ class User with ChangeNotifier {
     String domainUri = prefs.get("hopl_backend_uri") as String;
     try {
       var tokenRes = await client.post(Uri.parse("$domainUri/api/user/login"),
-          body: json.encode({
-            "emailId": "harshkeshri123456@gmail.com",
-            "password": "password"
-          }),
+          // body: json.encode({
+          //   "emailId": "harshkeshri123456@gmail.com",
+          //   "password": "password"
+          // }),
+          body: json.encode({"emailId": emailId, "password": password}),
           headers: {"Content-Type": "application/json"});
 
       if (tokenRes.statusCode != 200) {
@@ -111,8 +97,6 @@ class User with ChangeNotifier {
           Uri.parse("$domainUri/api/logged-user/profile"),
           headers: {"authorization": "Bearer hopl ${_userDetail.token}"});
       var parsedUserBody = json.decode(userRes.body);
-
-      // print(parsedUserBody);
 
       _userDetail = UserDetails(
           name: parsedUserBody["name"].isNotEmpty

@@ -52,27 +52,29 @@ const POSTHANDLER = async (req, res) => {
     const body = req.body;
     const DbModels = await DbConnect();
 
-    const accessToken = req.headers.authorization.split(" ")[2];
+    // const accessToken = req.headers.authorization.split(" ")[2];
 
-    let tempUser;
-    let tempErr;
+    // let tempUser;
+    // let tempErr;
 
-    jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
-      tempErr = err;
-      tempUser = user;
-    });
+    // jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
+    //   tempErr = err;
+    //   tempUser = user;
+    // });
 
-    if (tempErr) {
-      return res.status(401).send(tempErr);
-    }
+    // if (tempErr) {
+    //   return res.status(401).send(tempErr);
+    // }
 
     const newProduct = new DbModels.userProduct({
       productId: body.productId,
-      orderId: body.userOrderId,
+      orderId: body.orderId,
       quantity: 1,
+      name: body.name,
       price: body.price,
     });
 
+    
     const productData = await newProduct.save();
 
     await DbModels.userOrder.findByIdAndUpdate(body.orderId, {

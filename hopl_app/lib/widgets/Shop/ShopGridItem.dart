@@ -14,12 +14,15 @@ class ShopGridItem extends StatefulWidget {
 }
 
 class _ShopGridItemState extends State<ShopGridItem> {
-  var quantity = 0;
+  int quantity = 0;
 
   @override
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
     var shop = widget.shop;
+    quantity = Provider.of<Order>(context, listen: false)
+        .getProductQuantity(shopId, shop.items[widget.i].productId);
+
     return Container(
       height: 300,
       margin: const EdgeInsets.only(bottom: 20),
@@ -64,7 +67,7 @@ class _ShopGridItemState extends State<ShopGridItem> {
                   }
                   Provider.of<Order>(context, listen: false).removeItem(
                       shop.shopId,
-                      "63728e2cb5f2ed1c362922ad",
+                      // "63728e2cb5f2ed1c362922ad",
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
                       shop.items[widget.i].price);
@@ -98,7 +101,7 @@ class _ShopGridItemState extends State<ShopGridItem> {
                   });
                   Provider.of<Order>(context, listen: false).addItem(
                       shop.shopId,
-                      "63728e2cb5f2ed1c362922ad",
+                      // "63728e2cb5f2ed1c362922ad",
                       shop.items[widget.i].productId,
                       shop.items[widget.i].name,
                       shop.items[widget.i].price,

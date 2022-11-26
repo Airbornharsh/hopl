@@ -24,60 +24,6 @@ class Shops with ChangeNotifier {
               category: "food",
               productId: "7hy8f734u3r",
               shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 50,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "7hy8f734uwer",
-              shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 100,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "7hy8f24534u3r",
-              shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 100,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "7hy8f234534u3r",
-              shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 100,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "42y8f24534u3r",
-              shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 100,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "7hy8f3456534u3r",
-              shopId: "893hfy34brw9u34u3494h"),
-          ShopItem(
-              name: "Chips",
-              price: 100,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "456464gfdftggtr",
-              shopId: "893hfy34brw9u34u3494h"),
         ],
         imgUrl:
             "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"),
@@ -123,7 +69,6 @@ class Shops with ChangeNotifier {
             {"shopId": shop["_id"] as String, "productIds": shop["products"]});
       });
     } catch (e) {
-      print("next");
       print(e);
     } finally {
       client.close();
@@ -156,7 +101,6 @@ class Shops with ChangeNotifier {
 
       var products = json.decode(productsRes.body);
 
-      print(products);
 
       _items.firstWhere((shop) {
         if (shop.shopId == shopId) {
@@ -179,7 +123,6 @@ class Shops with ChangeNotifier {
         return false;
       });
     } catch (e) {
-      print('got');
       print(e);
     } finally {
       client.close();

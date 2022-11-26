@@ -1,48 +1,31 @@
 import 'package:flutter/cupertino.dart';
-
-class OrderItem {
-  final String shopId;
-  final String productId;
-  final String name;
-  final int quantity;
-  final double price;
-  final String imageUrl;
-
-  OrderItem({
-    required this.shopId,
-    required this.productId,
-    required this.name,
-    required this.quantity,
-    required this.price,
-    required this.imageUrl,
-  });
-}
+import 'package:hopl_app/models/userProduct.dart';
 
 class TempOrder {
-  final String shopId;
-  final List<OrderItem> items;
+  String shopId;
+  List<UserProduct> items;
 
   TempOrder({required this.shopId, required this.items});
 }
 
-class TempOrders{
-  
-}
-
 class Order with ChangeNotifier {
-  final Map<String, OrderItem> _items = {};
+  List<TempOrder> tempOrders = [];
+  late TempOrder tempOrder;
 
   var _totalPrice = 0.0;
 
-  List<OrderItem> getShopOrders(String shopId) {
-    List<OrderItem> tempItems = [];
+  List<UserProduct> getShopOrders(String shopId) {
+    List<UserProduct> tempItems = [];
 
-    _items.forEach((key, value) {
-      if (_items[key]?.shopId == shopId) {
-        tempItems.add(value);
-      }
-    });
-
+    if (tempOrders.isNotEmpty) {
+      tempOrders.firstWhere((tempOrder) {
+        if (tempOrder.shopId == shopId) {
+          tempItems = tempOrder.items;
+          return true;
+        }
+        return false;
+      });
+    }
     // tempItems = [
     //   Order(
     //       shopId: "893hfy34brw9u34u3494h",
@@ -54,8 +37,6 @@ class Order with ChangeNotifier {
     //           "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80")
     // ];
 
-
-
     return tempItems;
   }
 
@@ -63,61 +44,126 @@ class Order with ChangeNotifier {
     return _totalPrice;
   }
 
-  void addItem(String shopId, String orderId, String productId, String name,
-      double price, String imageUrl) {
-    if (_items.containsKey("$shopId$orderId$productId")) {
-      _items.update(
-        "$shopId$orderId$productId",
-        (existingOrder) => OrderItem(
-            shopId: existingOrder.shopId,
-            productId: existingOrder.productId,
-            name: existingOrder.name,
-            quantity: existingOrder.quantity + 1,
-            price: existingOrder.price,
-            imageUrl: existingOrder.imageUrl),
-      );
-      _totalPrice += price;
+  void addItem(String shopId, String productId, String name, double price,
+      String imageUrl) {
+    if (tempOrders.isNotEmpty) {
+      tempOrders.firstWhere((tempOrder) {
+        if (tempOrder.shopId == shopId) {
+          int have = 0;
+
+          int tempOrdersLength = tempOrder.items.length;
+          for (int i = 0; i < tempOrdersLength; i++) {
+            if (tempOrder.items[i].productId == productId) {
+              have = 1;
+              tempOrder.items.add(UserProduct(
+                  shopId: tempOrder.items[i].shopId,
+                  productId: tempOrder.items[i].productId,
+                  name: tempOrder.items[i].name,
+                  quantity: tempOrder.items[i].quantity + 1,
+                  price: tempOrder.items[i].price,
+                  imageUrl: tempOrder.items[i].imageUrl));
+              tempOrder.items.removeAt(i);
+              _totalPrice += price;
+            }
+          }
+
+          if (have == 0) {
+            tempOrder.items.add(UserProduct(
+                shopId: shopId,
+                productId: productId,
+                name: name,
+                quantity: 1,
+                price: price,
+                imageUrl: imageUrl));
+            _totalPrice += price;
+          }
+
+          return true;
+        }
+        return false;
+      });
     } else {
-      _items.putIfAbsent(
-        "$shopId$orderId$productId",
-        () => OrderItem(
+      tempOrders.add(TempOrder(shopId: shopId, items: [
+        UserProduct(
             shopId: shopId,
             productId: productId,
             name: name,
             quantity: 1,
             price: price,
-            imageUrl: imageUrl),
-      );
+            imageUrl: imageUrl)
+      ]));
       _totalPrice += price;
     }
-    print(_items.length);
     notifyListeners();
   }
 
-  void removeItem(String shopId, String orderId, String productId, String name,
-      double price) {
-    if (_items.containsKey("$shopId$orderId$productId")) {
-      _items.update(
-        "$shopId$orderId$productId",
-        (existingOrder) => OrderItem(
-            shopId: existingOrder.shopId,
-            productId: existingOrder.productId,
-            name: existingOrder.name,
-            quantity: existingOrder.quantity - 1,
-            price: existingOrder.price,
-            imageUrl: existingOrder.imageUrl),
-      );
-      _totalPrice -= price;
-    }
-    if (_items["$shopId$orderId$productId"]?.quantity == 1) {
-      _items.remove("$shopId$orderId$productId");
-      _totalPrice -= price;
-    }
-    // print(_items["$shopId$orderId$productId"]?.quantity);
+  void removeItem(String shopId, String productId, String name, double price) {
+    tempOrders.firstWhere((tempOrder) {
+      if (tempOrder.shopId == shopId) {
+        late UserProduct newUserProduct;
+        int have = 0;
+        tempOrder.items.removeWhere((item) {
+          if (item.productId == productId) {
+            if (item.quantity > 1) {
+              have = 1;
+              newUserProduct = UserProduct(
+                  shopId: item.shopId,
+                  productId: item.productId,
+                  name: item.name,
+                  quantity: item.quantity - 1,
+                  price: item.price,
+                  imageUrl: item.imageUrl);
+            }
+            _totalPrice -= price;
+            return true;
+          }
+          return false;
+        });
+
+        if (have == 1) {
+          tempOrder.items.add(newUserProduct);
+        }
+        return true;
+      }
+      return false;
+    });
     notifyListeners();
   }
 
-  int get getLength {
-    return _items.length;
+  int getProductQuantity(String shopId, String productId) {
+    int quantity = 0;
+    if (tempOrders.isNotEmpty) {
+      tempOrders.firstWhere((tempOrder) {
+        if (tempOrder.shopId == shopId) {
+          if (tempOrder.items.isNotEmpty) {
+            print("one");
+            tempOrder.items.firstWhere((UserProduct) {
+              print("Zero");
+              // if(UserProduct)
+              if (UserProduct.productId == productId) {
+                print("two");
+                quantity = UserProduct.quantity;
+                return true;
+              }
+              return false;
+            },
+                orElse: () => UserProduct(
+                    shopId: shopId,
+                    productId: productId,
+                    name: "",
+                    quantity: 0,
+                    price: 0,
+                    imageUrl: ""));
+          }
+          return true;
+        }
+        return false;
+      });
+    }
+    return quantity;
   }
+
+  // int get getLength {
+  //   return _items.length;
+  // }
 }

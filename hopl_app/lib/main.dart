@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hopl_app/providers/order.dart';
 import 'package:hopl_app/providers/orders.dart';
+import 'package:hopl_app/providers/shopkeeperOrders.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/screens/Auth_Screen.dart';
@@ -8,6 +9,8 @@ import 'package:hopl_app/screens/HomeScreen.dart';
 import 'package:hopl_app/screens/OrderScreen.dart';
 import 'package:hopl_app/screens/OrdersScreen.dart';
 import 'package:hopl_app/screens/ShopScreen.dart';
+import 'package:hopl_app/screens/ShopkeeperHomeScreen.dart';
+import 'package:hopl_app/screens/ShopkeeperOrderScreen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -30,6 +33,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(value: Shops()),
         ChangeNotifierProvider.value(value: Order()),
         ChangeNotifierProvider.value(value: Orders()),
+        ChangeNotifierProvider.value(value: ShopkeeperOrders()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -39,10 +43,12 @@ class _MyAppState extends State<MyApp> {
         // home: const HomeScreen(),
         home: const HomeScreen(),
         routes: {
+          ShopkeeperHomeScreen.routeName: (ctx) => const ShopkeeperHomeScreen(),
           ShopScreen.routeName: (ctx) => ShopScreen(),
           OrderScreen.routeName: (ctx) => const OrderScreen(),
           AuthScreen.routeName: (ctx) => const AuthScreen(),
           OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+          ShopkeeperOrderScreen.routeName: (ctx) => ShopkeeperOrderScreen(),
         },
       ),
     );

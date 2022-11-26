@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/screens/Auth_Screen.dart';
+import 'package:hopl_app/screens/HomeScreen.dart';
 import 'package:hopl_app/screens/OrdersScreen.dart';
+import 'package:hopl_app/screens/ShopkeeperHomeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,7 +21,7 @@ class AppDrawer extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
@@ -75,7 +77,34 @@ class AppDrawer extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
             ),
-          const Divider()
+          Expanded(
+            child: Container(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Provider.of<User>(context).getShopkeeperActive
+                  ? const Text("Switch as Shopkeeper")
+                  : const Text("Switch as Shopkeeper"),
+              const SizedBox(
+                width: 10,
+              ),
+              Switch(
+                  value: Provider.of<User>(context, listen: false)
+                      .getShopkeeperActive,
+                  onChanged: (val) {
+                    if (val) {
+                      Navigator.of(context)
+                          .pushReplacementNamed(ShopkeeperHomeScreen.routeName);
+                    } else {
+                      Navigator.of(context)
+                          .pushReplacementNamed(HomeScreen.routeName);
+                    }
+                    Provider.of<User>(context, listen: false)
+                        .setShopkeeperActive(val);
+                  })
+            ],
+          )
         ],
       ),
     );

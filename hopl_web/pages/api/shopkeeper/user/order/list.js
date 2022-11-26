@@ -1,8 +1,8 @@
-import DbConnect from "../../../../Server/config/Db_Config";
+import DbConnect from "../../../../../Server/config/Db_Config";
 import jwt from "jsonwebtoken";
 
 const handler = async (req, res) => {
-  if (req.method === "GET") {
+  if (req.body.method === "LIST") {
     await LISTHANDLER(req, res);
   } else {
     return res.status(400).send("Wrong Method");

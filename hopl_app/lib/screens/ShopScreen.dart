@@ -165,7 +165,6 @@ class _ShopScreenState extends State<ShopScreen> {
                   mainAxisSpacing: 10,
                 ),
                 itemBuilder: ((ctx, i) {
-                  print(shop.items.length);
                   return ShopGridItem(
                     i: i,
                     shop: shop,
