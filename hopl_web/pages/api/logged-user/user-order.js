@@ -71,11 +71,39 @@ const POSTHANDLER = async (req, res) => {
 
     const orderData = await newOrder.save();
 
+    const tempUserProducts = [];
+
+    body.userProducts.forEach((userProduct) => {
+      userProduct.orderId = orderData._id;
+      tempUserProducts.push(userProduct);
+    });
+
+    // console.log(tempUserProducts);
+
+    tempErr = null;
+    const resProductIds = [];
+
+    const insertRes = await DbModels.userProduct.insertMany(tempUserProducts);
+
+    if (insertRes) {
+      insertRes.forEach((prd) => {
+        resProductIds.push(prd._id);
+      });
+    }
+
+    await DbModels.userOrder.findByIdAndUpdate(orderData._id, {
+      $push: {
+        userProducts: {
+          $each: resProductIds,
+        },
+      },
+    });
+
     await DbModels.user.findByIdAndUpdate(tempUser._id, {
       $push: { orders: orderData._id },
     });
 
-    return res.send(orderData);
+    return res.send({ status: "Confirmed" });
   } catch (e) {
     console.log(e);
     return res.status(500).send(e);

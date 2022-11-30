@@ -30,6 +30,7 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
       createdAt: "",
       confirm: false);
   bool _confirmSnackBar = false;
+  bool _isOrderConfirm = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +46,33 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
         setState(() {
           order = e;
           widget.start = 0;
+          _isOrderConfirm = order.confirm;
         });
       });
     }
 
-    void confirmOrderFn(String userProductId) {
+    void confirmProductFn(String userProductId) {
       Provider.of<ShopkeeperOrders>(context, listen: false)
-          .confirmOrder(userProductId)
+          .confirmProduct(userProductId)
+          .then((e) {
+        // setState(() {
+        var snackBar = SnackBar(
+          content: const Text('Confirmed'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // });
+      });
+    }
+
+    void confirmOrderFn(String orderId) {
+      Provider.of<ShopkeeperOrders>(context, listen: false)
+          .confirmOrder(orderId)
           .then((e) {
         // setState(() {
         var snackBar = SnackBar(
@@ -69,6 +90,33 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
     }
 
     return Scaffold(
+      floatingActionButton: GestureDetector(
+        onTap: _isOrderConfirm
+            ? null
+            : () {
+                confirmOrderFn(order.orderId);
+                order.confirm = true;
+                setState(() {
+                  _isOrderConfirm = true;
+                });
+              },
+        child: Container(
+          padding:
+              const EdgeInsets.only(top: 10, bottom: 10, right: 12, left: 12),
+          decoration: BoxDecoration(
+              color: _isOrderConfirm ? Colors.grey : Colors.purple,
+              borderRadius: BorderRadius.circular(8)),
+          child: _isOrderConfirm
+              ? const Text(
+                  "Confirmed",
+                  style: TextStyle(color: Colors.white, fontSize: 17),
+                )
+              : const Text(
+                  "Confirm Order",
+                  style: TextStyle(color: Colors.white, fontSize: 17),
+                ),
+        ),
+      ),
       appBar: AppBar(
         title: const Text(
           "HOPL",
@@ -246,7 +294,7 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
                                     child: Center(
                                       child: TextButton(
                                           onPressed: () {
-                                            confirmOrderFn(order
+                                            confirmProductFn(order
                                                 .products[index].userProductId);
                                             order.products[index].confirm =
                                                 true;

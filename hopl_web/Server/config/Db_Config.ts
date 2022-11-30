@@ -9,12 +9,16 @@ import userProduct from "../models/UserProduct";
 
 dotenv.config();
 
+let count = 0;
+
 const DB_URI = process.env.DB_URI as string;
 
 const DbConnect = async () => {
   try {
     const connect = await mongoose.connect(DB_URI);
+    count++;
     console.log("Db Connected");
+    console.log(count);
 
     return {
       connect,

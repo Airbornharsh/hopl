@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
           ShopScreen.routeName: (ctx) => ShopScreen(),
           OrderScreen.routeName: (ctx) => const OrderScreen(),
           AuthScreen.routeName: (ctx) => const AuthScreen(),
-          OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+          OrdersScreen.routeName: (ctx) =>  OrdersScreen(),
           ShopkeeperOrderScreen.routeName: (ctx) => ShopkeeperOrderScreen(),
         },
       ),

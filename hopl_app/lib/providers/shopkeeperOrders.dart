@@ -54,8 +54,8 @@ class ShopkeeperOrders with ChangeNotifier {
     var client = Client();
     final prefs = await SharedPreferences.getInstance();
     String domainUri = prefs.get("hopl_backend_uri") as String;
+    var token = prefs.getString("hopl_accessToken");
     try {
-      var token = prefs.getString("hopl_accessToken");
       var orderRes = await client.post(
           Uri.parse("$domainUri/api/shopkeeper/user/order/list"),
           body: json.encode({"method": "LIST", "shopId": shopId}),
@@ -196,7 +196,7 @@ class ShopkeeperOrders with ChangeNotifier {
     return orderData;
   }
 
-  Future<bool> confirmOrder(String userProductId) async {
+  Future<bool> confirmProduct(String userProductId) async {
     bool response = false;
     var client = Client();
     final prefs = await SharedPreferences.getInstance();
@@ -216,6 +216,42 @@ class ShopkeeperOrders with ChangeNotifier {
       }
 
       // var parsedBody = json.decode(res.body);
+
+      response = true;
+
+      return true;
+    } catch (e) {
+      print(e);
+    } finally {
+      client.close();
+      notifyListeners();
+    }
+
+    return response;
+  }
+
+  Future<bool> confirmOrder(String orderId) async {
+    bool response = false;
+    var client = Client();
+    final prefs = await SharedPreferences.getInstance();
+    String domainUri = prefs.get("hopl_backend_uri") as String;
+    var token = prefs.getString("hopl_accessToken");
+    try {
+      var res = await client.post(
+          Uri.parse("$domainUri/api/shopkeeper/user/order/confirm"),
+          body: json.encode({"orderId": orderId}),
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": "Bearer hopl $token"
+          });
+
+      if (res.statusCode != 200) {
+        throw res.body;
+      }
+
+      // var parsedBody = json.decode(res.body);
+
+      // print(parsedBody);
 
       response = true;
 

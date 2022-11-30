@@ -3,18 +3,37 @@ import 'package:hopl_app/providers/order.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:provider/provider.dart';
 
-class OrderScreen extends StatelessWidget {
+class OrderScreen extends StatefulWidget {
   static const routeName = "/order";
   const OrderScreen({super.key});
 
+  @override
+  State<OrderScreen> createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
     final shop = Provider.of<Shops>(context, listen: false).filterById(shopId);
     final orders =
         Provider.of<Order>(context, listen: false).getShopOrders(shopId);
-    final totalPrice =
-        Provider.of<Order>(context, listen: false).getTotalPrice;
+    final totalPrice = Provider.of<Order>(context, listen: false).getTotalPrice;
+
+    void confirmOrderFn() {
+      Provider.of<Order>(context, listen: false).AddOrder(shopId).then((el) {
+        setState(() {
+          var snackBar = SnackBar(
+            content: Text(el),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +152,9 @@ class OrderScreen extends StatelessWidget {
                       width: 20,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        confirmOrderFn();
+                      },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.purple)),

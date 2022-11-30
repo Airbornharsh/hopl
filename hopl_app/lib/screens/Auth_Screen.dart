@@ -232,7 +232,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     isConfirmCode = true;
                   });
                 } else {
-                  var snackBar = new SnackBar(content: const Text("Try Again"));
+                  var snackBar = const SnackBar(content: Text("Try Again"));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   _nameController.clear();
                   _phoneNumberController.clear();

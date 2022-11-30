@@ -79,11 +79,11 @@ class User with ChangeNotifier {
     String domainUri = prefs.get("hopl_backend_uri") as String;
     try {
       var tokenRes = await client.post(Uri.parse("$domainUri/api/user/login"),
-          // body: json.encode({
-          //   "emailId": "harshkeshri123456@gmail.com",
-          //   "password": "password"
-          // }),
-          body: json.encode({"emailId": emailId, "password": password}),
+          body: json.encode({
+            "emailId": "harshkeshri123456@gmail.com",
+            "password": "password"
+          }),
+          // body: json.encode({"emailId": emailId, "password": password}),
           headers: {"Content-Type": "application/json"});
 
       if (tokenRes.statusCode != 200) {

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:hopl_app/models/userProduct.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TempOrder {
   String shopId;
@@ -9,7 +13,7 @@ class TempOrder {
 }
 
 class Order with ChangeNotifier {
-  List<TempOrder> tempOrders = [];
+  List<TempOrder> _tempOrders = [];
   late TempOrder tempOrder;
 
   var _totalPrice = 0.0;
@@ -17,8 +21,8 @@ class Order with ChangeNotifier {
   List<UserProduct> getShopOrders(String shopId) {
     List<UserProduct> tempItems = [];
 
-    if (tempOrders.isNotEmpty) {
-      tempOrders.firstWhere((tempOrder) {
+    if (_tempOrders.isNotEmpty) {
+      _tempOrders.firstWhere((tempOrder) {
         if (tempOrder.shopId == shopId) {
           tempItems = tempOrder.items;
           return true;
@@ -46,8 +50,8 @@ class Order with ChangeNotifier {
 
   void addItem(String shopId, String productId, String name, double price,
       String imageUrl) {
-    if (tempOrders.isNotEmpty) {
-      tempOrders.firstWhere((tempOrder) {
+    if (_tempOrders.isNotEmpty) {
+      _tempOrders.firstWhere((tempOrder) {
         if (tempOrder.shopId == shopId) {
           int have = 0;
 
@@ -83,7 +87,7 @@ class Order with ChangeNotifier {
         return false;
       });
     } else {
-      tempOrders.add(TempOrder(shopId: shopId, items: [
+      _tempOrders.add(TempOrder(shopId: shopId, items: [
         UserProduct(
             shopId: shopId,
             productId: productId,
@@ -98,7 +102,7 @@ class Order with ChangeNotifier {
   }
 
   void removeItem(String shopId, String productId, String name, double price) {
-    tempOrders.firstWhere((tempOrder) {
+    _tempOrders.firstWhere((tempOrder) {
       if (tempOrder.shopId == shopId) {
         late UserProduct newUserProduct;
         int have = 0;
@@ -132,16 +136,12 @@ class Order with ChangeNotifier {
 
   int getProductQuantity(String shopId, String productId) {
     int quantity = 0;
-    if (tempOrders.isNotEmpty) {
-      tempOrders.firstWhere((tempOrder) {
+    if (_tempOrders.isNotEmpty) {
+      _tempOrders.firstWhere((tempOrder) {
         if (tempOrder.shopId == shopId) {
           if (tempOrder.items.isNotEmpty) {
-            print("one");
             tempOrder.items.firstWhere((UserProduct) {
-              print("Zero");
-              // if(UserProduct)
               if (UserProduct.productId == productId) {
-                print("two");
                 quantity = UserProduct.quantity;
                 return true;
               }
@@ -161,6 +161,66 @@ class Order with ChangeNotifier {
       });
     }
     return quantity;
+  }
+
+  Future<String> AddOrder(String shopId) async {
+    var tempOrder = {"shopId": shopId, "userProducts": []};
+
+    _tempOrders.removeWhere((order) {
+      if (order.shopId == shopId) {
+        order.items.forEach((product) {
+          var tempProduct = {
+            "shopId": product.shopId,
+            "productId": product.productId,
+            "name": product.name,
+            "quantity": product.quantity,
+            "price": product.price,
+            "imgUrl": product.imageUrl,
+            "confirm": false
+          };
+          (tempOrder["userProducts"] as List<dynamic>).add(tempProduct);
+        });
+
+        return true;
+      }
+      return false;
+    });
+
+    // print(tempOrder);
+
+    var client = Client();
+    final prefs = await SharedPreferences.getInstance();
+    String domainUri = prefs.get("hopl_backend_uri") as String;
+    var token = prefs.getString("hopl_accessToken");
+
+    var finalResponse;
+
+    try {
+      var res = await client.post(
+          Uri.parse("$domainUri/api/logged-user/user-order"),
+          body: json.encode({
+            "shopId": tempOrder["shopId"],
+            "userProducts": tempOrder["userProducts"]
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": "Bearer hopl $token"
+          });
+
+      if (res.statusCode != 200) {
+        throw res.body;
+      }
+
+      var parsedBody = json.decode(res.body);
+
+      finalResponse = parsedBody["status"];
+    } catch (e) {
+      print(e);
+    } finally {
+      client.close();
+      notifyListeners();
+    }
+    return finalResponse;
   }
 
   // int get getLength {
