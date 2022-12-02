@@ -50,7 +50,7 @@ class ShopkeeperOrders with ChangeNotifier {
     return _items;
   }
 
-  void onLoad(String shopId) async {
+  Future<List<ShopkeeperOrder>> onLoad() async {
     var client = Client();
     final prefs = await SharedPreferences.getInstance();
     String domainUri = prefs.get("hopl_backend_uri") as String;
@@ -58,7 +58,7 @@ class ShopkeeperOrders with ChangeNotifier {
     try {
       var orderRes = await client.post(
           Uri.parse("$domainUri/api/shopkeeper/user/order/list"),
-          body: json.encode({"method": "LIST", "shopId": shopId}),
+          body: json.encode({"method": "LIST"}),
           headers: {
             "Content-Type": "application/json",
             "authorization": "Bearer hopl $token"
@@ -74,12 +74,11 @@ class ShopkeeperOrders with ChangeNotifier {
       parsedOrderBody.forEach((order) {
         _items.add(ShopkeeperOrder(
             user: UserData(
-                name: "name",
-                phoneNumber: 7637673675,
-                address: "Near this College,That City,765034",
-                imgUrl:
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                createdAt: "createdAt"),
+                name: order["user"]["name"],
+                phoneNumber: order["user"]["phoneNumber"],
+                address: order["user"]["address"],
+                imgUrl: order["user"]["imgUrl"],
+                createdAt: "Created At"),
             userId: order["userId"],
             orderId: order["_id"],
             shopId: order["shopId"],
@@ -89,12 +88,15 @@ class ShopkeeperOrders with ChangeNotifier {
             // createdAt: order["createdAt"],
             confirm: false));
       });
+
+      // print(parsedOrderBody);
     } catch (e) {
       print(e);
     } finally {
       client.close();
       notifyListeners();
     }
+    return _items;
   }
 
   Future<ShopkeeperOrder> onOrderLoad(String orderId) async {

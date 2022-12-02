@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hopl_app/providers/shopkeeperOrders.dart';
+import 'package:hopl_app/providers/shopkeeperShop.dart';
 import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/screens/HomeScreen.dart';
 import 'package:hopl_app/screens/ShopkeeperOrderScreen.dart';
@@ -8,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class ShopkeeperHomeScreen extends StatefulWidget {
   static const routeName = "/shopkeeper";
-  const ShopkeeperHomeScreen({super.key});
+  var start = 1;
+  ShopkeeperHomeScreen({super.key});
 
   @override
   State<ShopkeeperHomeScreen> createState() => _ShopkeeperHomeScreenState();
@@ -16,33 +18,30 @@ class ShopkeeperHomeScreen extends StatefulWidget {
 
 class _ShopkeeperHomeScreenState extends State<ShopkeeperHomeScreen> {
   int _selectedIndex = 0;
+  List<ShopkeeperOrder> orders = [];
+  List<Product> products = [];
 
   @override
   Widget build(BuildContext context) {
     var shopkeeperOrders =
         Provider.of<ShopkeeperOrders>(context, listen: false);
+    var shopkeeperShop = Provider.of<ShopkeeperShop>(context, listen: false);
 
-    shopkeeperOrders.onLoad("63723bd72a729cba94dac874");
+    if (widget.start == 1) {
+      shopkeeperOrders.onLoad().then((el) {
+        setState(() {
+          orders = el;
+          widget.start = 0;
+        });
+      });
 
-    var orders = shopkeeperOrders.getItems;
-
-    // var orders = [
-    //   ShopkeeperOrder(
-    //       user: UserData(
-    //           name: "name",
-    //           phoneNumber: 76378568733,
-    //           address: "address",
-    //           imgUrl:
-    //               "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-    //           createdAt: "createdAt"),
-    //       userId: "userId",
-    //       orderId: "_id",
-    //       shopId: "shopId",
-    //       products: [],
-    //       totalPrice: 0,
-    //       createdAt: "7:19,19th jan",
-    //       confirm: false)
-    // ];
+      shopkeeperShop.onLoad().then((el) {
+        setState(() {
+          products = el;
+          widget.start = 0;
+        });
+      });
+    }
 
     List<Widget> Render = [
       Container(
@@ -166,7 +165,16 @@ class _ShopkeeperHomeScreenState extends State<ShopkeeperHomeScreen> {
           ),
         ],
       ),
-      body: Render[_selectedIndex],
+      body: RefreshIndicator(
+          onRefresh: () async {
+            shopkeeperOrders.onLoad().then((el) {
+              setState(() {
+                orders = el;
+                widget.start = 0;
+              });
+            });
+          },
+          child: Render[_selectedIndex]),
     );
   }
 }

@@ -40,7 +40,11 @@ const LISTHANDLER = async (req, res) => {
       return res.status(401).send("Your are Not a Shopkeeper");
     }
 
-    const productData = await DbModels.product.find({ shopId: body.shopId });
+    const shopDetail = await DbModels.shop.findOne({
+      shopKeeperId: tempUser._id,
+    });
+
+    const productData = await DbModels.product.find({ shopId: shopDetail._id });
 
     return res.send(productData);
   } catch (e) {

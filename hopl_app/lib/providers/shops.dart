@@ -7,39 +7,17 @@ import 'package:hopl_app/models/shopItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Shops with ChangeNotifier {
-  final _items = [
-    Shop(
-        shopName: "Harsh Grocery ",
-        description: "New",
-        shopId: "893hfy34brw9u34u3494h",
-        rating: 4,
-        category: "grocery",
-        items: [
-          ShopItem(
-              name: "Chips",
-              price: 5,
-              stockQuantity: 20,
-              imgUrl:
-                  "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              category: "food",
-              productId: "7hy8f734u3r",
-              shopId: "893hfy34brw9u34u3494h"),
-        ],
-        imgUrl:
-            "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"),
-  ];
+  final List<Shop> _items = [];
 
   final List<Map<String, Object>> _shopProducts = [
     {"shopId": "", "productIds": []}
   ];
 
-  // var _items = [];
-
   List<Shop> get items {
     return _items;
   }
 
-  void onLoad() async {
+  Future<List<Shop>> onLoad() async {
     var client = Client();
     final prefs = await SharedPreferences.getInstance();
     String domainUri = prefs.get("hopl_backend_uri") as String;
@@ -74,6 +52,8 @@ class Shops with ChangeNotifier {
       client.close();
       notifyListeners();
     }
+
+    return _items;
   }
 
   Future<Shop> onShopLoad(String shopId) async {
@@ -100,7 +80,6 @@ class Shops with ChangeNotifier {
       }
 
       var products = json.decode(productsRes.body);
-
 
       _items.firstWhere((shop) {
         if (shop.shopId == shopId) {

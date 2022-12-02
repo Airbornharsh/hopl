@@ -32,12 +32,48 @@ const LISTHANDLER = async (req, res) => {
       return res.status(401).send("Your are Not a Shopkeeper");
     }
 
-    const userList = await DbModels.userOrder.find({
-      shopId: body.shopId,
+    const shopDetail = await DbModels.shop.findOne({
+      shopKeeperId: tempUser._id,
+    });
+
+    const userOrderList = await DbModels.userOrder.find({
+      shopId: shopDetail._id,
       confirm: false,
     });
 
-    return res.send(userList);
+    const tempUserIds = [];
+
+    userOrderList.forEach((user) => {
+      tempUserIds.push(user.userId);
+    });
+
+    const userList = await DbModels.user.find({
+      _id: tempUserIds,
+    });
+
+    const filteredUserOrderList = [];
+
+    for (let i = 0; i < userOrderList.length; i++) {
+      const tempUserOrder = {
+        _id: userOrderList[i]._id,
+        userId: userOrderList[i].userId,
+        shopId: userOrderList[i].shopId,
+        userProducts: userOrderList[i].userProducts,
+        confirm: userOrderList[i].confirm,
+        createdAt: userOrderList[i].createdAt,
+      };
+      tempUserOrder.user = {
+        name: userList[i].name,
+        emailId: userList[i].emailId,
+        phoneNumber: userList[i].phoneNumber,
+        address: userList[i].address,
+        imgUrl: userList[i].imgUrl,
+      };
+
+      filteredUserOrderList.push(tempUserOrder);
+    }
+
+    return res.send(filteredUserOrderList);
   } catch (e) {
     console.log(e);
     return res.status(500).send(e);

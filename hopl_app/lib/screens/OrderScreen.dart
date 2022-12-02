@@ -16,9 +16,11 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
     final shop = Provider.of<Shops>(context, listen: false).filterById(shopId);
+    Provider.of<Order>(context, listen: false).createOrder(shopId);
     final orders =
         Provider.of<Order>(context, listen: false).getShopOrders(shopId);
-    final totalPrice = Provider.of<Order>(context, listen: false).getTotalPrice;
+    final totalPrice =
+        Provider.of<Order>(context, listen: false).getTotalPrice(shopId);
 
     void confirmOrderFn() {
       Provider.of<Order>(context, listen: false).AddOrder(shopId).then((el) {

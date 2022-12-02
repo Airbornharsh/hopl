@@ -8,16 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class User with ChangeNotifier {
   late UserDetails _userDetail = UserDetails(
-      name: "name",
-      emailId: "emailId",
-      phoneNumber: 7837489789,
+      name: "",
+      emailId: "",
+      phoneNumber: 0,
       orders: [],
       shopkeeper: false,
-      address: "address",
+      address: "",
       imgUrl:
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       createdAt: "createdAt",
-      token: "token",
+      token: "",
       isAuth: false);
   // var _name;
   // var _emailId;
@@ -71,6 +71,21 @@ class User with ChangeNotifier {
     //     isAuth: _isAuth);
 
     return _userDetail;
+  }
+
+  void logout() {
+    _userDetail = UserDetails(
+        name: "",
+        emailId: "",
+        phoneNumber: 0,
+        orders: [],
+        shopkeeper: false,
+        address: "",
+        imgUrl:
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        createdAt: "createdAt",
+        token: "",
+        isAuth: false);
   }
 
   Future<bool> LoginHandler(String emailId, String password) async {

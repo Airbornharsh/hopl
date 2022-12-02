@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hopl_app/models/shop.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:hopl_app/providers/user.dart';
 import 'package:hopl_app/widgets/AppDrawer.dart';
@@ -8,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/";
-  const HomeScreen({super.key});
+  var start = 1;
+  HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -22,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
     void onLoad() async {
       final prefs = await SharedPreferences.getInstance();
       // prefs.setString("hopl_backend_uri", "http://localhost:3000");
-      // prefs.setString("hopl_backend_uri", "http://10.0.2.2:3000");
-      prefs.setString("hopl_backend_uri", "https://hopl.vercel.app");
+      prefs.setString("hopl_backend_uri", "http://10.0.2.2:3000");
+      // prefs.setString("hopl_backend_uri", "https://hopl.vercel.app");
     }
 
     onLoad();
@@ -35,7 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = Provider.of<User>(context, listen: false);
     final shops = Provider.of<Shops>(context, listen: false);
 
-    shops.onLoad();
+    List<Shop> shopList = [];
+
+    if (widget.start == 1) {
+      shops.onLoad().then((El) {
+        shopList = El;
+      });
+    }
 
     return Scaffold(
       drawer: const AppDrawer(),
@@ -86,7 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _searchController,
             ),
           ),
-          const ShopList()
+          ShopList(
+            shops: shopList,
+          )
         ],
       ),
     );

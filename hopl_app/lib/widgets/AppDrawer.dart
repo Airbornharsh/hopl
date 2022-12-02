@@ -68,7 +68,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () async {
                 Navigator.of(context).pop();
                 var prefs = await SharedPreferences.getInstance();
-                Provider.of<User>(context, listen: false).setIsAuth(false);
+                Provider.of<User>(context, listen: false).logout();
                 prefs.setString("hopl_accessToken", "");
 
                 var snackBar = const SnackBar(

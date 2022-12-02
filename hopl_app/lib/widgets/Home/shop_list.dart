@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hopl_app/models/shop.dart';
 import 'package:hopl_app/providers/shops.dart';
 import 'package:hopl_app/screens/ShopScreen.dart';
 import 'package:provider/provider.dart';
 
 class ShopList extends StatelessWidget {
-  const ShopList({super.key});
+  final List<Shop> shops;
+
+  const ShopList({super.key, required this.shops});
 
   @override
   Widget build(BuildContext context) {
