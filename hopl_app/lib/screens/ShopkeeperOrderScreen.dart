@@ -35,9 +35,6 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
   @override
   Widget build(BuildContext context) {
     var orderId = ModalRoute.of(context)?.settings.arguments as String;
-    var shopkeeperOrders =
-        Provider.of<ShopkeeperOrders>(context, listen: false);
-    // var order = shopkeeperOrders.filterById(orderId);
 
     if (widget.start == 1) {
       Provider.of<ShopkeeperOrders>(context, listen: false)
@@ -56,14 +53,9 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
           .confirmProduct(userProductId)
           .then((e) {
         // setState(() {
-        var snackBar = SnackBar(
-          content: const Text('Confirmed'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              // Some code to undo the change.
-            },
-          ),
+        var snackBar = const SnackBar(
+          content: Text('Confirmed'),
+          duration: Duration(milliseconds: 600),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         // });
@@ -75,14 +67,9 @@ class _ShopkeeperOrderScreenState extends State<ShopkeeperOrderScreen> {
           .confirmOrder(orderId)
           .then((e) {
         // setState(() {
-        var snackBar = SnackBar(
-          content: const Text('Confirmed'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              // Some code to undo the change.
-            },
-          ),
+        var snackBar = const SnackBar(
+          content: Text('Confirmed'),
+          duration: Duration(milliseconds: 600),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         // });

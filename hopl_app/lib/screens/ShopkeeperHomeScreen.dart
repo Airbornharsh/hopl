@@ -21,6 +21,15 @@ class _ShopkeeperHomeScreenState extends State<ShopkeeperHomeScreen> {
   List<ShopkeeperOrder> orders = [];
   List<Product> products = [];
 
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _qunatityController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _imgUrlController = TextEditingController();
+  final _categoryController = TextEditingController();
+
+  int productIsActive = -1;
+
   @override
   Widget build(BuildContext context) {
     var shopkeeperOrders =
@@ -115,11 +124,207 @@ class _ShopkeeperHomeScreenState extends State<ShopkeeperHomeScreen> {
             })),
       ),
       Container(
-        child: const Text("Stocks"),
+        margin: const EdgeInsets.only(top: 20),
+        child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: ((ctx, i) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (productIsActive == i) {
+                      productIsActive = -1;
+                    } else {
+                      productIsActive = i;
+                    }
+                  });
+                },
+                child: Container(
+                  margin:
+                      const EdgeInsets.only(bottom: 10, right: 20, left: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 2),
+                        padding: const EdgeInsets.only(
+                            bottom: 10, top: 15, left: 10, right: 10),
+                        decoration: const BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: Colors.black38,
+                              offset: Offset(0.1, 2),
+                              blurRadius: 7,
+                              spreadRadius: 0.6,
+                              blurStyle: BlurStyle.outer)
+                        ]),
+                        child: ListTile(
+                          leading: Image.network(
+                            products[i].imgUrl,
+                            // height: 110,
+                          ),
+                          title: Row(
+                            children: [
+                              const Text(
+                                "Name: ",
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              Text(products[i].name),
+                            ],
+                          ),
+                          subtitle: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Category: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  Expanded(child: Text(products[i].category))
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Price: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                          "₹${products[i].price.toString()}"))
+                                ],
+                              )
+                            ],
+                          ),
+                          trailing: Text("${products[i].quantity}"),
+                        ),
+                      ),
+                      if (productIsActive == i)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _nameController.text = products[i].name;
+                                _descriptionController.text =
+                                    products[i].description;
+                                _priceController.text =
+                                    products[i].price.toString();
+                                _qunatityController.text =
+                                    products[i].quantity.toString();
+                                _imgUrlController.text = products[i].imgUrl;
+                                _categoryController.text = products[i].category;
+                                modalProduct(
+                                    "edit", context, products[i].productId);
+                              },
+                              child: Container(
+                                width:
+                                    (MediaQuery.of(context).size.width - 41) /
+                                        2,
+                                height: 40,
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 218, 218, 218),
+                                    border: Border.fromBorderSide(BorderSide(
+                                        width: 1,
+                                        strokeAlign: StrokeAlign.center))),
+                                child: Center(
+                                    child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.edit,
+                                        color: Colors.purple, size: 19),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      "Edit",
+                                      style: TextStyle(color: Colors.purple),
+                                    )
+                                  ],
+                                )),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: ((context) {
+                                      return AlertDialog(
+                                        title: const Text("Confirmation"),
+                                        content: const Text(
+                                            "Do You Want to Delete This Item "),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Provider.of<ShopkeeperShop>(
+                                                        context,
+                                                        listen: false)
+                                                    .deleteProduct(
+                                                        products[i].productId)
+                                                    .then((el) {
+                                                  if (el) {
+                                                    var snackBar =
+                                                        const SnackBar(
+                                                      content:
+                                                          Text("Item Deleted"),
+                                                      duration: Duration(
+                                                          milliseconds: 600),
+                                                    );
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(snackBar);
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                });
+                                              },
+                                              child: const Text("Yes")),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("No")),
+                                        ],
+                                      );
+                                    }));
+                              },
+                              child: Container(
+                                width:
+                                    (MediaQuery.of(context).size.width - 41) /
+                                        2,
+                                height: 40,
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 218, 218, 218),
+                                    border: Border.fromBorderSide(BorderSide(
+                                        width: 1,
+                                        strokeAlign: StrokeAlign.center))),
+                                child: Center(
+                                    child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.delete,
+                                        color: Colors.purple, size: 19),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      "Delete",
+                                      style: TextStyle(color: Colors.purple),
+                                    )
+                                  ],
+                                )),
+                              ),
+                            ),
+                          ],
+                        )
+                    ],
+                  ),
+                ),
+              );
+            })),
       )
     ];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -165,16 +370,248 @@ class _ShopkeeperHomeScreenState extends State<ShopkeeperHomeScreen> {
           ),
         ],
       ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (_selectedIndex == 1)
+            FloatingActionButton(
+              onPressed: () {
+                _nameController.clear();
+                _descriptionController.clear();
+                _qunatityController.clear();
+                _priceController.clear();
+                _imgUrlController.clear();
+                _categoryController.clear();
+                modalProduct("add", context, "");
+              },
+              child: const Icon(Icons.add),
+            )
+        ],
+      ),
       body: RefreshIndicator(
           onRefresh: () async {
-            shopkeeperOrders.onLoad().then((el) {
-              setState(() {
-                orders = el;
-                widget.start = 0;
+            if (_selectedIndex == 0) {
+              shopkeeperOrders.onLoad().then((el) {
+                setState(() {
+                  orders = el;
+                  widget.start = 0;
+                });
               });
-            });
+            } else {
+              shopkeeperShop.onLoad().then((el) {
+                setState(() {
+                  products = el;
+                  widget.start = 0;
+                });
+              });
+            }
           },
           child: Render[_selectedIndex]),
     );
+  }
+
+  Future<dynamic> modalProduct(
+      String use, BuildContext context, String productId) {
+    double upwards = 250;
+
+    void addUpwards() {
+      setState(() {
+        upwards = 250;
+      });
+    }
+
+    return showModalBottomSheet(
+        context: context,
+        builder: ((ctx) {
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(top: 12, bottom: upwards + 12),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      autofocus: true,
+                      onTap: addUpwards,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Name",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _nameController,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      onTap: addUpwards,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Description",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _descriptionController,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      onTap: addUpwards,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Qunatity",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _qunatityController,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      onTap: addUpwards,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Price",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _priceController,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      onTap: addUpwards,
+                      keyboardType: TextInputType.url,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Image Url",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _imgUrlController,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.only(top: 4),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.purple)),
+                    child: TextField(
+                      onTap: addUpwards,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Category",
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                      controller: _categoryController,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        if (use == "add") {
+                          Provider.of<ShopkeeperShop>(context, listen: false)
+                              .addProduct(
+                                  _nameController.text,
+                                  _descriptionController.text,
+                                  int.parse(_qunatityController.text),
+                                  double.parse(_priceController.text),
+                                  _categoryController.text,
+                                  _imgUrlController.text)
+                              .then((el) {
+                            if (el) {
+                              var snackBar = const SnackBar(
+                                content: Text("Product Added"),
+                                duration: Duration(milliseconds: 600),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+
+                              Navigator.of(context).pop();
+
+                              _nameController.clear();
+                              _descriptionController.clear();
+                              _qunatityController.clear();
+                              _priceController.clear();
+                              _imgUrlController.clear();
+                              _categoryController.clear();
+                            }
+                          });
+                        } else if (use == "edit") {
+                          Provider.of<ShopkeeperShop>(context, listen: false)
+                              .editProduct(
+                                  productId,
+                                  _nameController.text,
+                                  _descriptionController.text,
+                                  int.parse(_qunatityController.text),
+                                  double.parse(_priceController.text),
+                                  _categoryController.text,
+                                  _imgUrlController.text)
+                              .then((el) {
+                            if (el) {
+                              var snackBar = const SnackBar(
+                                content: Text("Product Updated"),
+                                duration: Duration(milliseconds: 600),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+
+                              // Navigator.of(context).pop();
+
+                              // _nameController.clear();
+                              // _descriptionController.clear();
+                              // _qunatityController.clear();
+                              // _priceController.clear();
+                              // _imgUrlController.clear();
+                              // _categoryController.clear();
+                            }
+                          });
+                        }
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.purple)),
+                      child: Text(
+                        use == "add" ? "Add Product" : "Update product",
+                        style: const TextStyle(color: Colors.white),
+                      )),
+                  const SizedBox(
+                    height: 4,
+                  )
+                ],
+              ),
+            ),
+          );
+        }));
   }
 }

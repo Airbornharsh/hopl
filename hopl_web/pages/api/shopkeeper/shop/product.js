@@ -76,13 +76,22 @@ const POSTHANDLER = async (req, res) => {
       return res.status(401).send("Your are Not a Shopkeeper");
     }
 
+    const shopDetail = await DbModels.shop.findOne({
+      shopKeeperId: tempUser._id,
+    });
+
+    console.log(body);
+
     const newProduct = await DbModels.product({
       name: body.name,
       description: body.description,
-      shopId: body.shopId,
+      shopId: shopDetail._id,
       quantity: body.quantity,
       price: body.price,
       category: body.category,
+      imgUrl: body.imgUrl
+        ? body.imgUrl
+        : "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-…",
     });
 
     const productData = await newProduct.save();
@@ -158,18 +167,18 @@ const PATCHHANDLER = async (req, res) => {
     body.category && (updateProduct.category = body.category);
 
     if (
-      !updateUser.name &&
-      !updateUser.description &&
-      !updateUser.quantity &&
-      !updateUser.price &&
-      !updateUser.category
+      !updateProduct.name &&
+      !updateProduct.description &&
+      !updateProduct.quantity &&
+      !updateProduct.price &&
+      !updateProduct.category
     ) {
       return res.status(400).send("Nothing to Update");
     }
 
     await DbModels.product.findByIdAndUpdate(body.productId, updateProduct);
 
-    return res.send("Updated");
+    return res.send({ status: "Updated" });
   } catch (e) {
     console.log(e);
     return res.status(500).send(e);
@@ -201,7 +210,7 @@ const DELETEHANDLER = async (req, res) => {
 
     await DbModels.product.findByIdAndDelete(body.productId);
 
-    return res.send("Deleted");
+    return res.send({ status: "Deleted" });
   } catch (e) {
     console.log(e);
     return res.status(500).send(e);

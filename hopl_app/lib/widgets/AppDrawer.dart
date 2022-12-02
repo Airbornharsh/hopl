@@ -54,13 +54,14 @@ class AppDrawer extends StatelessWidget {
                 Navigator.of(context).pushNamed(AuthScreen.routeName);
               },
             ),
-          ListTile(
-            leading: const Icon(Icons.local_activity),
-            title: const Text("Orders"),
-            onTap: () {
-              Navigator.of(context).pushNamed(OrdersScreen.routeName);
-            },
-          ),
+          if (Provider.of<User>(context).getAuth)
+            ListTile(
+              leading: const Icon(Icons.local_activity),
+              title: const Text("Orders"),
+              onTap: () {
+                Navigator.of(context).pushNamed(OrdersScreen.routeName);
+              },
+            ),
           if (Provider.of<User>(context).getAuth)
             ListTile(
               leading: const Icon(Icons.logout),
