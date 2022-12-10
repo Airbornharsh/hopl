@@ -24,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
     void onLoad() async {
       final prefs = await SharedPreferences.getInstance();
       // prefs.setString("hopl_backend_uri", "http://localhost:3000");
-      // prefs.setString("hopl_backend_uri", "http://10.0.2.2:3000");
-      prefs.setString("hopl_backend_uri", "https://hopl.vercel.app");
+      prefs.setString("hopl_backend_uri", "http://10.0.2.2:3000");
+      // prefs.setString("hopl_backend_uri", "https://hopl.vercel.app");
     }
 
     onLoad();

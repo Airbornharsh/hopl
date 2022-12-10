@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hopl_app/models/shop.dart';
 import 'package:hopl_app/providers/order.dart';
-import 'package:hopl_app/providers/shops.dart';
 import 'package:provider/provider.dart';
 
 class ShopGridItem extends StatefulWidget {

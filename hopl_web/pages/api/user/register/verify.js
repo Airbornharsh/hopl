@@ -41,7 +41,6 @@ const POSTHANDLER = async (req, res) => {
 
     const userSave = await newUser.save();
 
-
     return res.send(userSave);
   } catch (e) {
     console.log(e);

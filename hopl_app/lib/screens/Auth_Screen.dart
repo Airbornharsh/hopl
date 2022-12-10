@@ -12,7 +12,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   var isLogin = true;
-  var isConfirmCode = false;
+  // var isConfirmCode = false;
   var isLoading = false;
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
@@ -31,11 +31,11 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
-  void changeConfirmCode(bool data) {
-    setState(() {
-      isConfirmCode = data;
-    });
-  }
+  // void changeConfirmCode(bool data) {
+  //   setState(() {
+  //     isConfirmCode = data;
+  //   });
+  // }
 
   void changeRoute(String routeName, BuildContext context) {
     Navigator.of(context).pushReplacementNamed(routeName);
@@ -107,8 +107,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   // ),
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                _emailIdController.clear();
-                _passwordController.clear();
+                // _emailIdController.clear();
+                // _passwordController.clear();
               }
               setState(() {
                 isLoading = false;
@@ -229,16 +229,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
                 if (Res) {
                   setState(() {
-                    isConfirmCode = true;
+                    isLogin = true;
                   });
                 } else {
                   var snackBar = const SnackBar(content: Text("Try Again"));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  _nameController.clear();
-                  _phoneNumberController.clear();
-                  _emailIdController.clear();
-                  _passwordController.clear();
-                  _confirmCodeController.clear();
+                  // _nameController.clear();
+                  // _phoneNumberController.clear();
+                  // _emailIdController.clear();
+                  // _passwordController.clear();
+                  // _confirmCodeController.clear();
                 }
                 // setState(() {
                 //   isConfirmCode = true;
@@ -274,81 +274,81 @@ class _AuthScreenState extends State<AuthScreen> {
       ],
     );
 
-    var verify = Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          padding: const EdgeInsets.only(top: 4),
-          decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
-          child: TextField(
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              hintText: "Code",
-              fillColor: Colors.white,
-              filled: true,
-            ),
-            controller: _confirmCodeController,
-          ),
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        TextButton(
-            onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
-              var res = await Provider.of<User>(context, listen: false)
-                  .CodeHandler(_confirmCodeController.text);
+    // var verify = Column(
+    //   children: [
+    //     Container(
+    //       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+    //       padding: const EdgeInsets.only(top: 4),
+    //       decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
+    //       child: TextField(
+    //         decoration: const InputDecoration(
+    //           border: InputBorder.none,
+    //           hintText: "Code",
+    //           fillColor: Colors.white,
+    //           filled: true,
+    //         ),
+    //         controller: _confirmCodeController,
+    //       ),
+    //     ),
+    //     const SizedBox(
+    //       height: 4,
+    //     ),
+    //     TextButton(
+    //         onPressed: () async {
+    //           setState(() {
+    //             isLoading = true;
+    //           });
+    //           var res = await Provider.of<User>(context, listen: false)
+    //               .CodeHandler(_confirmCodeController.text);
 
-              if (res) {
-                setState(() {
-                  isLogin = true;
-                });
-              } else {
-                var snackBar =
-                    const SnackBar(content: Text("Enter the Otp Correctly"));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                _confirmCodeController.clear();
-              }
-              setState(() {
-                isLoading = false;
-              });
-            },
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.purple)),
-            child: const Text(
-              "Confirm Code",
-              style: TextStyle(color: Colors.white),
-            )),
-        const SizedBox(
-          height: 7,
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isConfirmCode = false;
-            });
-          },
-          child: const Text("Re-Enter the Details"),
-        ),
-        const SizedBox(
-          height: 7,
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isLogin = true;
-            });
-          },
-          child: const Text(
-            "Login Instead",
-            style: TextStyle(fontSize: 14, color: Colors.purple),
-          ),
-        )
-      ],
-    );
+    //           if (res) {
+    //             setState(() {
+    //               isLogin = true;
+    //             });
+    //           } else {
+    //             var snackBar =
+    //                 const SnackBar(content: Text("Enter the Otp Correctly"));
+    //             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //             _confirmCodeController.clear();
+    //           }
+    //           setState(() {
+    //             isLoading = false;
+    //           });
+    //         },
+    //         style: ButtonStyle(
+    //             backgroundColor:
+    //                 MaterialStateProperty.all<Color>(Colors.purple)),
+    //         child: const Text(
+    //           "Confirm Code",
+    //           style: TextStyle(color: Colors.white),
+    //         )),
+    //     const SizedBox(
+    //       height: 7,
+    //     ),
+    //     GestureDetector(
+    //       onTap: () {
+    //         setState(() {
+    //           isConfirmCode = false;
+    //         });
+    //       },
+    //       child: const Text("Re-Enter the Details"),
+    //     ),
+    //     const SizedBox(
+    //       height: 7,
+    //     ),
+    //     GestureDetector(
+    //       onTap: () {
+    //         setState(() {
+    //           isLogin = true;
+    //         });
+    //       },
+    //       child: const Text(
+    //         "Login Instead",
+    //         style: TextStyle(fontSize: 14, color: Colors.purple),
+    //       ),
+    //     )
+    //   ],
+    // );
 
     return Scaffold(
       body: Stack(
@@ -362,8 +362,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: 20, left: 10, right: 10, bottom: 20),
                 width: (MediaQuery.of(context).size.width - 70),
                 // height: 500,
-                constraints: BoxConstraints(
-                    maxHeight: (isLogin ? 270 : (!isConfirmCode ? 490 : 240))),
+                constraints: BoxConstraints(maxHeight: (isLogin ? 270 : 490)),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -376,7 +375,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           blurStyle: BlurStyle.outer)
                     ]),
                 child: Container(
-                  child: isLogin ? login : (!isConfirmCode ? register : verify),
+                  child: isLogin ? login : register,
                 ),
               ),
             ),

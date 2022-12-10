@@ -12,6 +12,8 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  var _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final shopId = ModalRoute.of(context)?.settings.arguments as String;
@@ -23,8 +25,12 @@ class _OrderScreenState extends State<OrderScreen> {
         Provider.of<Order>(context, listen: false).getTotalPrice(shopId);
 
     void confirmOrderFn() {
+      setState(() {
+        _isLoading = true;
+      });
       Provider.of<Order>(context, listen: false).AddOrder(shopId).then((el) {
         setState(() {
+          _isLoading = false;
           var snackBar = SnackBar(
             content: Text(el),
             action: SnackBarAction(
@@ -33,6 +39,10 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+      }).catchError(() {
+        setState(() {
+          _isLoading = false;
         });
       });
     }
@@ -62,114 +72,139 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 20),
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            const Text("Orders"),
-            const SizedBox(
-              height: 20,
-            ),
-            if (orders.isNotEmpty)
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: ListView.builder(
-                    itemCount: orders.length,
-                    itemBuilder: ((ctx, i) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: const BoxDecoration(boxShadow: [
+      body: Stack(
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              padding: const EdgeInsets.only(top: 20),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  const Text("Orders"),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  if (orders.isNotEmpty)
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: ListView.builder(
+                          itemCount: orders.length,
+                          itemBuilder: ((ctx, i) {
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: const BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black38,
+                                    offset: Offset(0.1, 2),
+                                    blurRadius: 7,
+                                    spreadRadius: 0.6,
+                                    blurStyle: BlurStyle.outer)
+                              ]),
+                              child: ListTile(
+                                leading: Image.network(
+                                  orders[i].imageUrl,
+                                  height: 100,
+                                ),
+                                title: Text(orders[i].name),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        "price: Rs${orders[i].price.toString()}"),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        "quantity: ${orders[i].quantity.toString()}")
+                                  ],
+                                ),
+                                trailing: Text(
+                                  "Rs ${(orders[i].quantity * orders[i].price).toString()}",
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                                isThreeLine: true,
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
+                  if (orders.isEmpty)
+                    const Text(
+                      "No Orders To Show",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  if (orders.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
                           BoxShadow(
                               color: Colors.black38,
                               offset: Offset(0.1, 2),
                               blurRadius: 7,
                               spreadRadius: 0.6,
                               blurStyle: BlurStyle.outer)
-                        ]),
-                        child: ListTile(
-                          leading: Image.network(
-                            orders[i].imageUrl,
-                            height: 100,
+                        ],
+                      ),
+                      height: 55,
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Total Price",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.purple),
                           ),
-                          title: Text(orders[i].name),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text("price: Rs${orders[i].price.toString()}"),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text("quantity: ${orders[i].quantity.toString()}")
-                            ],
+                          const Expanded(child: Text("")),
+                          Text(
+                            "Rs $totalPrice",
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.purple),
                           ),
-                          trailing: Text(
-                            "Rs ${(orders[i].quantity * orders[i].price).toString()}",
-                            style: const TextStyle(fontSize: 20),
+                          const SizedBox(
+                            width: 20,
                           ),
-                          isThreeLine: true,
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ),
-            if (orders.isEmpty)
-              const Text(
-                "No Orders To Show",
-                style: TextStyle(fontSize: 20),
-              ),
-            if (orders.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black38,
-                        offset: Offset(0.1, 2),
-                        blurRadius: 7,
-                        spreadRadius: 0.6,
-                        blurStyle: BlurStyle.outer)
-                  ],
-                ),
-                height: 55,
-                child: Row(
-                  children: [
-                    const Text(
-                      "Total Price",
-                      style: TextStyle(fontSize: 15, color: Colors.purple),
-                    ),
-                    const Expanded(child: Text("")),
-                    Text(
-                      "Rs $totalPrice",
-                      style:
-                          const TextStyle(fontSize: 15, color: Colors.purple),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        confirmOrderFn();
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.purple)),
-                      child: const Text(
-                        "Confirm",
-                        style: TextStyle(color: Colors.white),
+                          TextButton(
+                            onPressed: () {
+                              confirmOrderFn();
+                            },
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.purple)),
+                            child: const Text(
+                              "Confirm",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
                       ),
                     )
-                  ],
-                ),
-              )
-          ],
-        ),
+                ],
+              ),
+            ),
+          ),
+          if (_isLoading)
+            Positioned(
+              top: 0,
+              left: 0,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                color: const Color.fromRGBO(80, 80, 80, 0.3),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+            ),
+        ],
       ),
     );
   }

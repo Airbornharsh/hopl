@@ -109,10 +109,12 @@ class User with ChangeNotifier {
           headers: {"authorization": "Bearer hopl ${_userDetail.token}"});
       var parsedUserBody = json.decode(userRes.body);
 
+      print(parsedUserBody["imgUrl"]);
+
       _userDetail = UserDetails(
           name: parsedUserBody["name"].isNotEmpty
               ? parsedUserBody["name"]
-              : "harsh",
+              : "User",
           emailId: parsedUserBody["emailId"].isNotEmpty
               ? parsedUserBody["emailId"]
               : "emailId",
@@ -127,7 +129,7 @@ class User with ChangeNotifier {
           imgUrl: parsedUserBody["imgUrl"],
           createdAt: parsedUserBody["createdAt"].isNotEmpty
               ? parsedUserBody["createdAt"]
-              : "emailId",
+              : "00",
           token: _userDetail.token,
           isAuth: true);
 
@@ -161,7 +163,7 @@ class User with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     String domainUri = prefs.get("hopl_backend_uri") as String;
     try {
-      var Res = await client.post(Uri.parse("$domainUri/api/user/register"),
+      var Res = await client.post(Uri.parse("$domainUri/api/user/registerwo"),
           body: json.encode({
             "name": name,
             "phoneNumber": phoneNumber,
@@ -173,7 +175,8 @@ class User with ChangeNotifier {
         return false;
       }
       var parsedBody = json.decode(Res.body);
-      _otpAccessToken = parsedBody["accessToken"];
+
+      // _otpAccessToken = parsedBody["accessToken"];
       return true;
     } catch (e) {
       print(e);
